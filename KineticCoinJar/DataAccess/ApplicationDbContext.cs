@@ -15,5 +15,10 @@ namespace KineticCoinJar.DataAccess
         {
         }
         public DbSet<Coin> Coins { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Coin>().HasNoKey();
+        }
     }
 }

@@ -2,8 +2,10 @@
 using KineticCoinJar.IRepositories;
 using KineticCoinJar.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace KineticCoinJar.Repositories
@@ -11,6 +13,7 @@ namespace KineticCoinJar.Repositories
     public class CoinJar : ICoinJar
 
     {
+        private ConcurrentBag<ICoin> _coins = new ConcurrentBag<ICoin>();
         private ApplicationDbContext context;
 
         public CoinJar(ApplicationDbContext context)
@@ -21,24 +24,20 @@ namespace KineticCoinJar.Repositories
 
         public void AddCoin(ICoin coin)
         {
-            // if volume of Coin Jar is not enough to add a new coin, raise an appropriate exception
-            if ((CurrentVolume.Unit + coin.Volume.Unit) > MaxVolume.Unit)
-                // throw new CoinOverFlowException
-                throw new CoinOverFlowException();
-
-            _coins.Add(coin);
-            CurrentVolume = CurrentVolume + (Volume)coin.Volume;
-            CurrentAmount = CurrentAmount + coin.Amount;
+            context.Coins.Add((Coin)coin);
+            context.SaveChanges();
         }
 
         public decimal GetTotalAmount()
         {
-            throw new NotImplementedException();
+            return context.Coins.Select(c => (decimal)c.Volume* (decimal)c.Amount).Sum() / 100m;
         }
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            //clear bag in a thread-safe way
+            var newBag = new ConcurrentBag<ICoin>();
+            Interlocked.Exchange(ref _coins, newBag);
         }
     }
 }

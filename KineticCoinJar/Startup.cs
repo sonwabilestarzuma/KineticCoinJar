@@ -1,3 +1,4 @@
+using KineticCoinJar.DataAccess;
 using KineticCoinJar.Models;
 using KineticCoinJar.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -55,9 +56,9 @@ namespace KineticCoinJar
                     Description = "This is an coinjar API for a assessment"
                 });
 
-                var xfile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xpath = Path.Combine(AppContext.BaseDirectory, xfile);
-                c.IncludeXmlComments(xpath);
+                //var xfile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                //var xpath = Path.Combine(AppContext.BaseDirectory, xfile);
+                //c.IncludeXmlComments(xpath);
             });
             //services.AddSwaggerGen(c =>
             //{
