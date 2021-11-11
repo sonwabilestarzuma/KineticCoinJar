@@ -11,16 +11,16 @@ namespace KineticCoinJar.Handlers
 {
     public class GetTotalAmountQueryHandler : RequestHandler<GetTotalAmountQuery, GetTotalAmountQueryResponse>
     {
-        private readonly ICoinJar _db;
+        private readonly ICoinJar _dbcontext;
 
-        public GetTotalAmountQueryHandler(ICoinJar db)
+        public GetTotalAmountQueryHandler(ICoinJar dbcontext )
         {
-            _db = db;
+            _dbcontext  = dbcontext;
         }
 
         protected override GetTotalAmountQueryResponse Handle(GetTotalAmountQuery query)
         {
-            return new GetTotalAmountQueryResponse { TotalAmount = _db.GetTotalAmount() };
+            return new GetTotalAmountQueryResponse { TotalAmount = _dbcontext.GetTotalAmount() };
         }
     }
 }

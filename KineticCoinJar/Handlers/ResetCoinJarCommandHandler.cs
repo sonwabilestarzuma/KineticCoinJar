@@ -1,4 +1,5 @@
-﻿using KineticCoinJar.IRepositories;
+﻿using KineticCoinJar.DataAccess;
+using KineticCoinJar.IRepositories;
 using KineticCoinJar.Messages;
 using KineticCoinJar.Repositories;
 using MediatR;
@@ -11,16 +12,11 @@ namespace KineticCoinJar.Handlers
 {
     public class ResetCoinJarCommandHandler : RequestHandler<ResetCoinJarCommand>
     {
-        private readonly ICoinJar _db;
+        private ApplicationDbContext _dbcontext;
 
-        public ResetCoinJarCommandHandler(ICoinJar db)
+        public ResetCoinJarCommandHandler(ICoinJar coin, ApplicationDbContext dbcontext)
         {
-            _db = db;
-        }
-
-        protected override void Handle(ResetCoinJarCommand coinJarCommand)
-        {
-            _db.Reset();
+            _dbcontext = dbcontext;
         }
     }
 }

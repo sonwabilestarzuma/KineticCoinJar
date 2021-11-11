@@ -12,20 +12,20 @@ using System.Threading.Tasks;
 namespace KineticCoinJar.Handlers
 {
 
-    public class AddCoinCommandHandler : RequestHandler<AddCoinCommand, OperationResult>
+    public class AddCoinCommandHandler : RequestHandler<AddCoinCommand, ValidationRuleEngines.OperationResult>
     {
-        private readonly ICoinJar _db;
+        private readonly ICoinJar _dbcontext ;
         private readonly IValidationRuleEngine<ICoin> _coinJarValidatorRulesEngine;
 
-        public AddCoinCommandHandler(ICoinJar db, IValidationRuleEngine<ICoin> coinJarValidatorRulesEngine)
+        public AddCoinCommandHandler(ICoinJar dbcontext, IValidationRuleEngine<ICoin> coinJarValidatorRulesEngine)
         {
-            _db = db;
+            _dbcontext = dbcontext;
             _coinJarValidatorRulesEngine = coinJarValidatorRulesEngine;
         }
 
-        protected override OperationResult Handle(AddCoinCommand command)
+        protected override ValidationRuleEngines.OperationResult Handle(AddCoinCommand command)
         {
-            var result = new OperationResult();
+            var result = new ValidationRuleEngines.OperationResult();
 
             try
             {
@@ -33,7 +33,7 @@ namespace KineticCoinJar.Handlers
 
                 ICoin coin = coinFactory.GetCoin(command.Amount);
 
-                OperationResult jarValidatorResult = _coinJarValidatorRulesEngine.Validate(coin);
+                ValidationRuleEngines.OperationResult jarValidatorResult = _coinJarValidatorRulesEngine.Validate(coin);
 
                 if (jarValidatorResult.HasErrors)
                 {
@@ -41,7 +41,7 @@ namespace KineticCoinJar.Handlers
                     return result;
                 }
 
-                _db.AddCoin(coin);
+                _dbcontext.AddCoin(coin);
                 return result;
             }
             catch (ApplicationException e)

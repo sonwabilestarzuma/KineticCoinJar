@@ -20,5 +20,7 @@ namespace KineticCoinJar.DataAccess
         {
             modelBuilder.Entity<Coin>().HasNoKey();
         }
+
+      
     }
 }
